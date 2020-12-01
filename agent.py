@@ -17,11 +17,11 @@ class DQNAgent(AgentWithConverter):
         self.env = env
         self.obs_space = observation_space
         # self.action_space = action_space
-        # print('Filtering actions..')
-        # self.action_space.filter_action(self._filter_action)
-        # print('Done')
-        self.obs_size = observation_space.size()
-        self.action_size = action_space.size()
+        print('Filtering actions..')
+        self.action_space.filter_action(self._filter_action)
+        print('Done')
+        self.obs_size = self.obs_space.size()
+        self.action_size = self.action_space.size()
         print('obs space:{}; action space: {}'.format(self.obs_size, self.action_size))
         self.device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
         self.policy_net = Dueling_DQN(self.obs_size, self.action_size).to(self.device)

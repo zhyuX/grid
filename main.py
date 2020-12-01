@@ -17,4 +17,5 @@ env.seed(123)
 print('环境 {} 初始化成功'.format(env_name))
 
 my_agent = DQNAgent(env, env.observation_space, env.action_space)
+print('observation size:{} | action size:{}'.format(my_agent.obs_space, my_agent.action_size))
 my_agent.train()

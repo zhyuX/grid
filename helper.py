@@ -21,6 +21,7 @@ action_space = env.action_space
 obs_space = env.observation_space
 print('observation 总数：', env.observation_space.n)
 print('action 总数：', env.action_space.n)
+print(env.action_space.size())
 print('--- observation space ---')
 obs_obj = obs_space.subtype()
 obs_obj_shape = obs_obj.shape()
