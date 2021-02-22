@@ -14,11 +14,13 @@ class Actor(nn.Module):
         super(Actor, self).__init__()
         self.fc1 = nn.Linear(state_dim, 512)
         self.fc2 = nn.Linear(512, 512)
+        self.fc3 = nn.Linear(512, 512)
         self.action_head = nn.Linear(512, action_dim)
 
     def forward(self, x):
         x = F.relu(self.fc1(x))
         x = F.relu(self.fc2(x))
+        x = F.relu(self.fc3(x))
         action_prob = F.softmax(self.action_head(x), dim=1)
         return action_prob
 
@@ -83,6 +85,12 @@ class PPO(object):
         self.buffer.append(transition)
         self.counter += 1
 
+    def change_mode(self, mode='train'):
+        if mode == 'train':
+            self.actor_net.train()
+        elif mode == 'eval':
+            self.actor_net.eval()
+
     def update(self, epoch):
         state = torch.tensor([t.state for t in self.buffer], dtype=torch.float).to(self.device)
         action = torch.tensor([t.action for t in self.buffer], dtype=torch.long).view(-1, 1).to(self.device)
@@ -101,7 +109,7 @@ class PPO(object):
         # print("The agent is updateing....")
         for i in range(self.ppo_update_time):
             for index in BatchSampler(SubsetRandomSampler(range(len(self.buffer))), self.batch_size, False):
-                if self.training_step % 1000 == 0:
+                if self.training_step % 5000 == 0:
                     print('epoch {} ，train {} times'.format(epoch, self.training_step))
                 # with torch.no_grad():
                 Gt_index = Gt[index].view(-1, 1)
